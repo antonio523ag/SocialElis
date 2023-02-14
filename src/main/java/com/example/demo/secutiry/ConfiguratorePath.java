@@ -1,6 +1,7 @@
 package com.example.demo.secutiry;
 
-import jakarta.servlet.Filter;
+import com.example.demo.model.Ruolo;
+import com.example.demo.utils.UtilPaths;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,18 +15,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfiguration {
+public class ConfiguratorePath {
 
-    private final JwtAuthenticationFilter jwtAuthFilter;
+    private final FilterAutenticazione jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf()
-                .disable()
+                .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/general/**").permitAll()
+                .requestMatchers("/"+ UtilPaths.General.GENERAL+"/**").permitAll()
+                .requestMatchers("/"+UtilPaths.Admin.ADMIN+"/**").hasRole(Ruolo.GESTORE.getNomeTrimmed())
                 .anyRequest()
                 .authenticated()
                 .and()

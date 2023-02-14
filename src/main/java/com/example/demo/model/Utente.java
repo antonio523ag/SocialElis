@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.example.demo.dto.request.RegistrazioneRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,7 +38,7 @@ public class Utente implements UserDetails {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_classroom")
     private Classe classe;
-    @Column(nullable = false,name = "ultimo_accesso")
+    @Column(name = "ultimo_accesso")
     private LocalDateTime ultimoAccesso;
     @Column(nullable = false,columnDefinition = "boolean default false")
     private boolean bloccato;
@@ -47,9 +48,32 @@ public class Utente implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "id_post",updatable = false,nullable = false),uniqueConstraints = @UniqueConstraint(columnNames={"id_user","id_post"}))
     private List<Post> miPiace;
 
+    public Utente(String nome, String cognome, String email, String password, String username) {
+        this.nome = nome;
+        this.cognome = cognome;
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        ruolo=Ruolo.GESTORE;
+
+    }
+
+    public Utente(RegistrazioneRequest request, Classe c) {
+        nome=request.getNome();
+        cognome=request.getCognome();
+        email=request.getEmail();
+        password=request.getPassword();
+        username=request.getUsername();
+        pathImg= request.getPathImg();
+        ruolo=Ruolo.STUDENTE;
+        classe=c;
+        bloccato=true;
+
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(ruolo.name()));
+        return List.of(new SimpleGrantedAuthority(ruolo.getNome()));
     }
 
     @Override

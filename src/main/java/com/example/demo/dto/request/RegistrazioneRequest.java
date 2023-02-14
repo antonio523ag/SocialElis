@@ -29,7 +29,7 @@ public class RegistrazioneRequest {
     @NotBlank
     private String username;
     private String pathImg;
-    private long idClasse;
+    private String codiceClasse;
     @NotNull
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$")
     private String password;

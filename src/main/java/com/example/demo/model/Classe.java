@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import com.example.demo.dto.request.CreaClasseDTO;
+import com.example.demo.utils.Utilities;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,4 +30,12 @@ public class Classe {
     private LocalDate dataInizio;
     @Column(name = "link")
     private String linkEsterno;
+    private boolean chiusa;
+
+    public Classe(CreaClasseDTO request) {
+        nome= request.getNome();
+        codice= Utilities.generaCodice(nome);
+        dataInizio=request.getDataInizio();
+        linkEsterno= request.getLinkEsterno();
+    }
 }
