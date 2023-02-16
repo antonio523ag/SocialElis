@@ -29,4 +29,6 @@ public class Post {
     private Utente creatore;
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     private List<Commento> commenti;
+    @ManyToMany(mappedBy = "miPiace")
+    private List<Utente> miPiace;
 }

@@ -1,5 +1,7 @@
 package com.example.demo.secutiry;
 
+import com.example.demo.exception.PasswordErrataException;
+import com.example.demo.exception.UtenteBloccatoException;
 import com.example.demo.model.Utente;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

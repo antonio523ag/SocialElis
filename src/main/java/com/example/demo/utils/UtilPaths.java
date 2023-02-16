@@ -19,18 +19,21 @@ public interface UtilPaths {
         String ACCETTA_RICHIESTE_BULK="accettaRichiesteBulk";
     }
 
-    interface studente{
+    interface Studente {
         String STUDENTE="studente";
         String MODIFICA_PROFILO="modificaProfilo";
         String AGGIUNGI_IMMAGINE="aggiungiImmagine";
-        String VISUALIZZA_POST="visualizzaPost";
         String CERCA_UTENTE="cercaUtente";
+        String VISUALIZZA_FOTO_PROFILO="fotoProfilo";
+        String VISUALIZZA_FOTO_POST="fotoPost";
+        String VISUALIZZA_POST="visualizzaPost";
         String VISUALIZZA_POST_UTENTE="visualizzaPostUtente";
         String SCRIVI_POST="scriviPost";
         String ELIMINA_POST="eliminaPost";
         String COMMENTA_POST="commentaPost";
         String ELIMINA_COMMENTO="eliminaCommento";
         String METTI_LIKE_A_POST="mettiLikeAPost";
+        String RIMUOVI_LIKE_A_POST="rimuoviLikeAPost";
         String VISUALIZZA_LIKE_DEL_POST="visualizzaLikeDelPost";
     }
 

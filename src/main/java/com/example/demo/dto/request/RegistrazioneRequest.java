@@ -25,7 +25,6 @@ public class RegistrazioneRequest {
     @NotEmpty
     @NotBlank
     private String username;
-    private String pathImg;
     @Min(1)
     private String codiceClasse;
     @NotNull

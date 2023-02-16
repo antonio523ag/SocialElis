@@ -30,12 +30,14 @@ public class UtenteAdminController {
     }
     @GetMapping("/"+ UtilPaths.Admin.ACCETTA_RICHIESTA)
     public ResponseEntity<String> accettaUtente(@RequestBody IdUtenteRequest request){
-        return null;
+        service.accettaRichiesta(request);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/"+ UtilPaths.Admin.ACCETTA_RICHIESTE_BULK)
     public ResponseEntity<String> accettaRichiesteBulk(@RequestBody IdUtenteBulkRequest request){
-        return null;
+        service.accettaRichieste(request);
+        return ResponseEntity.ok().build();
     }
 
 

@@ -27,6 +27,7 @@ public class ConfiguratorePath {
                 .authorizeHttpRequests()
                 .requestMatchers("/"+ UtilPaths.General.GENERAL+"/**").permitAll()
                 .requestMatchers("/"+UtilPaths.Admin.ADMIN+"/**").hasRole(Ruolo.GESTORE.getNomeTrimmed())
+                .requestMatchers("/"+ UtilPaths.Studente.STUDENTE+"/**").hasAnyRole(Ruolo.GESTORE.getNomeTrimmed(),Ruolo.STUDENTE.getNomeTrimmed())
                 .anyRequest()
                 .authenticated()
                 .and()

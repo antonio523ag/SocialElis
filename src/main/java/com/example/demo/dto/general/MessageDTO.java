@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -14,10 +15,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class MessageDTO {
     private String message;
-    private LocalDateTime time;
+    private String time;
 
     public MessageDTO(Exception exception) {
-        message=exception.getMessage();
-        time=LocalDateTime.now();
+        this(exception.getMessage());
+    }
+
+    public MessageDTO(String msg){
+        message=msg;
+        time=LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy kk:mm:ss"));
     }
 }

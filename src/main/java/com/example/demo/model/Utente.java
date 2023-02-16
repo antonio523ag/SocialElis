@@ -8,8 +8,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 @AllArgsConstructor
 @Entity
@@ -25,7 +28,7 @@ public class Utente implements UserDetails {
     private String nome;
     @Column(name = "last_name",nullable = false,updatable = false)
     private String cognome;
-    @Column(nullable = false,unique = true,updatable = false)
+    @Column(nullable = false,unique = true)
     private String email;
     @Column(nullable = false)
     private String password;
@@ -64,7 +67,6 @@ public class Utente implements UserDetails {
         email=request.getEmail();
         password=request.getPassword();
         username=request.getUsername();
-        pathImg= request.getPathImg();
         ruolo=Ruolo.STUDENTE;
         classe=c;
         bloccato=true;
@@ -94,5 +96,37 @@ public class Utente implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public boolean isValid(String testoDaCercare){
+        return isValid(testoDaCercare,nome+cognome)||isValid(testoDaCercare,username)||isValid(testoDaCercare,email);
+
+    }
+
+    private static boolean isValid(String t1,String t2){
+        List<Character> caratteriDellaRicerca=new ArrayList<>();
+        for(char c:t2.toLowerCase().replace(" ","").toCharArray()){
+            caratteriDellaRicerca.add(c);
+        }
+        for(char c:t1.toLowerCase().replace(" ","").toCharArray()){
+            if(caratteriDellaRicerca.contains(c)){
+                caratteriDellaRicerca.remove(c);
+            }else return false;
+        }
+        return true;
+
+    }
+
+    @Override
+    public String toString() {
+        return "Utente{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", cognome='" + cognome + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", username='" + username + '\'' +
+                ", pathImg='" + pathImg + '\'' +
+                '}';
     }
 }
