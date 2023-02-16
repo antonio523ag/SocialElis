@@ -12,11 +12,11 @@ public interface UtilPaths {
 
     interface Admin{
         String ADMIN="admin";
-        String VISUALIZZA_RICHIESTE="visualizzaRichieste";
-        String ACCETTA_RICHIESTA="accettaRichiesta";
         String APRI_AULA="apriAula";
         String CHIUDI_AULA="chiudiAula";
-        String CREA_ADMIN="creaAdmin";
+        String VISUALIZZA_RICHIESTE="visualizzaRichieste";
+        String ACCETTA_RICHIESTA="accettaRichiesta";
+        String ACCETTA_RICHIESTE_BULK="accettaRichiesteBulk";
     }
 
     interface studente{

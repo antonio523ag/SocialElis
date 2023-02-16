@@ -1,20 +1,27 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.general.ClasseDTO;
-import com.example.demo.dto.request.CreaClasseDTO;
+import com.example.demo.dto.request.IdAulaRequest;
+import com.example.demo.dto.request.CreaClasseRequest;
 import com.example.demo.exception.ClasseNonTrovataException;
 import com.example.demo.model.Classe;
+import com.example.demo.model.Utente;
 import com.example.demo.repository.ClasseRepository;
 import com.example.demo.service.ClasseService;
+import com.example.demo.service.UtenteService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ClasseServiceImpl implements ClasseService {
 
     private final ClasseRepository repo;
+    private final UtenteService service;
 
-    public ClasseServiceImpl(ClasseRepository repo) {
+    public ClasseServiceImpl(ClasseRepository repo, UtenteService service) {
         this.repo = repo;
+        this.service = service;
     }
 
     @Override
@@ -36,8 +43,24 @@ public class ClasseServiceImpl implements ClasseService {
     }
 
     @Override
-    public ClasseDTO aggiungiClasse(CreaClasseDTO request) {
+    public ClasseDTO aggiungiClasse(CreaClasseRequest request) {
         Classe c=new Classe(request);
         return aggiungiClasse(c);
+    }
+
+    @Override
+    public void chiudiAula(long id) {
+        Classe c=repo.findById(id).orElseThrow(()-> new ClasseNonTrovataException("nessuna classe con id "+id));
+        List<Utente> alunni=c.getAlunni();
+        alunni.forEach(a->a.setClasse(null));
+        alunni.forEach(service::salvaUtente);
+        c.setChiusa(true);
+        c.setAlunni(null);
+        repo.save(c);
+    }
+
+    @Override
+    public void chiudiAula(IdAulaRequest request) {
+        chiudiAula(request.getIdAula());
     }
 }

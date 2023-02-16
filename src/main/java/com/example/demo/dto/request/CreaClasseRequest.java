@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class CreaClasseDTO {
+public class CreaClasseRequest {
 
     @NotNull
     @NotEmpty

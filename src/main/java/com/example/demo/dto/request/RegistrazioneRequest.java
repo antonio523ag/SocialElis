@@ -1,10 +1,7 @@
 package com.example.demo.dto.request;
 
 import com.example.demo.model.Ruolo;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -29,6 +26,7 @@ public class RegistrazioneRequest {
     @NotBlank
     private String username;
     private String pathImg;
+    @Min(1)
     private String codiceClasse;
     @NotNull
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$")

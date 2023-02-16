@@ -1,6 +1,6 @@
 package com.example.demo.model;
 
-import com.example.demo.dto.request.CreaClasseDTO;
+import com.example.demo.dto.request.CreaClasseRequest;
 import com.example.demo.utils.Utilities;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @Entity
@@ -31,8 +32,10 @@ public class Classe {
     @Column(name = "link")
     private String linkEsterno;
     private boolean chiusa;
+    @OneToMany(mappedBy = "classe")
+    private List<Utente> alunni;
 
-    public Classe(CreaClasseDTO request) {
+    public Classe(CreaClasseRequest request) {
         nome= request.getNome();
         codice= Utilities.generaCodice(nome);
         dataInizio=request.getDataInizio();

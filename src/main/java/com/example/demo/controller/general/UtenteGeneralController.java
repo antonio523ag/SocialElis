@@ -10,7 +10,6 @@ import com.example.demo.service.UtenteService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -58,7 +57,7 @@ public class UtenteGeneralController {
     public String init(){
         Utente u=new Utente("antonio","grillo","a.grillo@elis.org","Iamroot!1","antonio523");
         utenteService.salvaUtente(u);
-        Classe c=new Classe(0,"codice","nome",null, LocalDate.now(),null,false);
+        Classe c=new Classe(0,"codice","nome",null, LocalDate.now(),null,false,null);
         classeService.aggiungiClasse(c);
         return  "fatto!";
     }
