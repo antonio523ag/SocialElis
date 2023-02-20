@@ -1,4 +1,4 @@
-package com.example.demo.controller.admin;
+package com.example.demo.controller;
 
 import com.example.demo.dto.general.ClasseDTO;
 import com.example.demo.dto.request.IdAulaRequest;
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/"+ UtilPaths.Admin.ADMIN)
-public class ClasseAdminController {
+public class AdminClasseController {
 
     private final ClasseService service;
 
-    public ClasseAdminController(ClasseService service) {
+    public AdminClasseController(ClasseService service) {
         this.service = service;
     }
 

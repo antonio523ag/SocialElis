@@ -34,6 +34,6 @@ public class PostDTO {
         idCreatore=p.getCreatore().getId();
         usernameCreatore=p.getCreatore().getUsername();
         commenti=p.getCommenti()==null?new ArrayList<>():p.getCommenti().stream().map(CommentoDTO::new).toList();
-        numeroDiLike=p.getMiPiace().size();
+        numeroDiLike=p.getMiPiace()==null?0:p.getMiPiace().size();
     }
 }

@@ -13,8 +13,13 @@ import java.util.List;
 @Setter
 public class VisualizzaPostDTO {
     private List<PostDTO> post;
+    private int numeroPagina;
+    private int maxPagine;
 
-    public VisualizzaPostDTO(List<Post> post){
-        this.post=post.stream().map(PostDTO::new).toList();
+
+    public VisualizzaPostDTO(List<PostDTO> post, int pageNumber,int maxPagine){
+        this.post=post;
+        numeroPagina=pageNumber;
+        this.maxPagine=maxPagine;
     }
 }

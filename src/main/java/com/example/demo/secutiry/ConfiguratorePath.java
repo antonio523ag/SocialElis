@@ -11,6 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -20,11 +23,15 @@ public class ConfiguratorePath {
     private final FilterAutenticazione jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
+
                 .authorizeHttpRequests()
+
                 .requestMatchers("/"+ UtilPaths.General.GENERAL+"/**").permitAll()
                 .requestMatchers("/"+UtilPaths.Admin.ADMIN+"/**").hasRole(Ruolo.GESTORE.getNomeTrimmed())
                 .requestMatchers("/"+ UtilPaths.Studente.STUDENTE+"/**").hasAnyRole(Ruolo.GESTORE.getNomeTrimmed(),Ruolo.STUDENTE.getNomeTrimmed())

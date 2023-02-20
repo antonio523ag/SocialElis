@@ -1,8 +1,7 @@
-package com.example.demo.controller.admin;
+package com.example.demo.controller;
 
 import com.example.demo.dto.request.IdUtenteBulkRequest;
 import com.example.demo.dto.request.IdUtenteRequest;
-import com.example.demo.dto.response.RichiestaResponse;
 import com.example.demo.dto.response.VisualizzaRichiesteResponse;
 import com.example.demo.service.UtenteService;
 import com.example.demo.utils.UtilPaths;
@@ -14,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/"+UtilPaths.Admin.ADMIN)
-public class UtenteAdminController {
+public class AdminUtenteController {
 
 
     private final UtenteService service;
 
-    public UtenteAdminController(UtenteService service) {
+    public AdminUtenteController(UtenteService service) {
         this.service = service;
     }
 

@@ -1,4 +1,4 @@
-package com.example.demo.controller.studente;
+package com.example.demo.controller;
 
 
 import com.example.demo.dto.general.UtenteDTO;
@@ -6,7 +6,6 @@ import com.example.demo.dto.request.CercaUtenteRequest;
 import com.example.demo.dto.request.ModificaUtenteRequest;
 import com.example.demo.dto.response.UtenteDTOListResponse;
 import com.example.demo.model.Utente;
-import com.example.demo.service.FileStorageService;
 import com.example.demo.service.UtenteService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +17,11 @@ import static com.example.demo.utils.UtilPaths.Studente.*;
 
 @RestController
 @RequestMapping("/"+ STUDENTE)
-public class UtenteController {
+public class StudenteUtenteController {
 
     private final UtenteService service;
 
-    public UtenteController(UtenteService service) {
+    public StudenteUtenteController(UtenteService service) {
         this.service = service;
     }
 
@@ -40,8 +39,9 @@ public class UtenteController {
     }
 
     @PostMapping("/"+CERCA_UTENTE)
-    public ResponseEntity<UtenteDTOListResponse> cercaUtente(@RequestBody CercaUtenteRequest request){
-        UtenteDTOListResponse response=service.cercaUtente(request);
+    public ResponseEntity<UtenteDTOListResponse> cercaUtente(@RequestBody CercaUtenteRequest request,UsernamePasswordAuthenticationToken p){
+        Utente u=(Utente)p.getPrincipal();
+        UtenteDTOListResponse response=service.cercaUtente(request,u);
         return ResponseEntity.ok(response);
     }
 

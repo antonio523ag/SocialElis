@@ -1,4 +1,4 @@
-package com.example.demo.controller.studente;
+package com.example.demo.controller;
 
 import com.example.demo.service.FileStorageService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,10 +17,10 @@ import static com.example.demo.utils.UtilPaths.Studente.*;
 
 @RestController
 @RequestMapping("/"+ STUDENTE)
-public class FotoController {
+public class StudenteFotoController {
     private final FileStorageService fileService;
 
-    public FotoController( FileStorageService fileService) {
+    public StudenteFotoController(FileStorageService fileService) {
         this.fileService = fileService;
     }
 

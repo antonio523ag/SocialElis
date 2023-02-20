@@ -11,21 +11,15 @@ import lombok.ToString;
 @ToString
 public class RegistrazioneRequest {
     @NotBlank
-    @NotNull
-    @NotEmpty
     private String nome;
-    @NotBlank
-    @NotNull
     @NotEmpty
     private String cognome;
     @NotNull
     @Pattern(regexp = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")
     private String email;
-    @NotNull
-    @NotEmpty
     @NotBlank
     private String username;
-    @Min(1)
+    @NotBlank
     private String codiceClasse;
     @NotNull
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$")

@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface UtenteService {
 
     Utente login(LoginRequest request);
+    Utente getUtenteById(IdUtenteRequest request);
     void registrati(RegistrazioneRequest request);
     void salvaUtente(Utente u);
     VisualizzaRichiesteResponse visualizzaRichieste();
@@ -17,5 +18,5 @@ public interface UtenteService {
     void accettaRichiesta(IdUtenteRequest request);
     UtenteDTO modificaUtente(ModificaUtenteRequest request);
     UtenteDTO aggiungiImmagineProfilo(Utente u, MultipartFile img);
-    UtenteDTOListResponse cercaUtente(CercaUtenteRequest request);
+    UtenteDTOListResponse cercaUtente(CercaUtenteRequest request, Utente richiedente);
 }

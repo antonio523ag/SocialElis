@@ -27,8 +27,8 @@ public class Post {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_user",nullable = false,updatable = false)
     private Utente creatore;
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE,CascadeType.MERGE,CascadeType.PERSIST})
     private List<Commento> commenti;
-    @ManyToMany(mappedBy = "miPiace")
+    @ManyToMany(mappedBy = "miPiace",cascade = {CascadeType.REMOVE,CascadeType.MERGE,CascadeType.PERSIST})
     private List<Utente> miPiace;
 }

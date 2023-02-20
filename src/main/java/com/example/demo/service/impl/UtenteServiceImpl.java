@@ -43,6 +43,11 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
+    public Utente getUtenteById(IdUtenteRequest request) {
+        return repo.findById(request.getId()).orElseThrow(()->new UtenteNonTrovatoException(request.getId()));
+    }
+
+    @Override
     public void registrati(RegistrazioneRequest request) {
         Classe c=classeRepo.findClasseByCodice(request.getCodiceClasse()).orElseThrow(()-> new ClasseNonTrovataException("nessuna classe con codice "+request.getCodiceClasse()));
         Utente u=new Utente(request,c);
@@ -99,8 +104,9 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public UtenteDTOListResponse cercaUtente(CercaUtenteRequest request) {
+    public UtenteDTOListResponse cercaUtente(CercaUtenteRequest request, Utente richiedente) {
         List<Utente> u=repo.findAll().stream().filter(u1->u1.isValid(request.getTestoRicerca())).toList();
+        if(richiedente.getClasse()==null)u.removeIf(u1->richiedente.getClasse()==null?u1.getClasse()!=null:u1.getClasse().getId()!=richiedente.getClasse().getId());
         return new UtenteDTOListResponse(u);
     }
 }
