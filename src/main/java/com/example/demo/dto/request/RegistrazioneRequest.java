@@ -1,6 +1,5 @@
 package com.example.demo.dto.request;
 
-import com.example.demo.model.Ruolo;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +11,7 @@ import lombok.ToString;
 public class RegistrazioneRequest {
     @NotBlank
     private String nome;
-    @NotEmpty
+    @NotBlank
     private String cognome;
     @NotNull
     @Pattern(regexp = "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$")

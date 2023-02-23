@@ -17,6 +17,7 @@ public interface UtilPaths {
         String VISUALIZZA_RICHIESTE="visualizzaRichieste";
         String ACCETTA_RICHIESTA="accettaRichiesta";
         String ACCETTA_RICHIESTE_BULK="accettaRichiesteBulk";
+        String CREA_ADMIN="creaAdmin";
     }
 
     interface Studente {

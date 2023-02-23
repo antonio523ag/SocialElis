@@ -4,6 +4,7 @@ import com.example.demo.dto.general.PostDTO;
 import com.example.demo.dto.request.IdPostRequest;
 import com.example.demo.dto.request.IdUtenteRequest;
 import com.example.demo.dto.request.NumeroPaginaRequest;
+import com.example.demo.dto.response.ListaUtentiLike;
 import com.example.demo.dto.response.VisualizzaPostDTO;
 import com.example.demo.model.Utente;
 import com.example.demo.service.PostService;
@@ -20,7 +21,9 @@ import static com.example.demo.utils.UtilPaths.Studente.*;
 @RequestMapping("/"+ STUDENTE)
 public class StudentePostController {
     /**
-     *         String ELIMINA_POST="eliminaPost";
+     * String METTI_LIKE_A_POST="mettiLikeAPost";
+     * String RIMUOVI_LIKE_A_POST="rimuoviLikeAPost";
+     * String VISUALIZZA_LIKE_DEL_POST="visualizzaLikeDelPost";
      */
 
     private final PostService service;
@@ -55,5 +58,22 @@ public class StudentePostController {
         Utente u=(Utente)token.getPrincipal();
         service.cancellaPost(request,u);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping("/"+METTI_LIKE_A_POST)
+    public ResponseEntity<String> mettiLikeAPost(@RequestBody IdPostRequest request,UsernamePasswordAuthenticationToken token){
+        Utente u=(Utente)token.getPrincipal();
+        service.mettiLikeAPost(request,u);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+    @PostMapping("/"+RIMUOVI_LIKE_A_POST)
+    public ResponseEntity<String> rimuoviLikeDaPost(@RequestBody IdPostRequest request,UsernamePasswordAuthenticationToken token){
+        Utente u=(Utente)token.getPrincipal();
+        service.rimuoviLikeDaPost(request,u);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+    @PostMapping("/"+VISUALIZZA_POST)
+    public ResponseEntity<ListaUtentiLike> visualizzaLikeDelPost(@RequestBody IdPostRequest request,UsernamePasswordAuthenticationToken token){
+        return ResponseEntity.status(HttpStatus.OK).body(service.visualizzaLike(request));
     }
 }

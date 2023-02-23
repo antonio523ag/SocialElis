@@ -1,10 +1,7 @@
 package com.example.demo.exception.handler;
 
 import com.example.demo.dto.general.MessageDTO;
-import com.example.demo.exception.ClasseNonTrovataException;
-import com.example.demo.exception.PasswordErrataException;
-import com.example.demo.exception.UtenteBloccatoException;
-import com.example.demo.exception.UtenteNonTrovatoException;
+import com.example.demo.exception.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +18,50 @@ public class GestoreEccezioni {
         MessageDTO m=new MessageDTO(exception);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(m);
     }
-    @ExceptionHandler(UtenteNonTrovatoException.class)
-    public ResponseEntity<MessageDTO> utenteNonTrovatoException(UtenteNonTrovatoException exception){
+
+    @ExceptionHandler(FileException.class)
+    public ResponseEntity<MessageDTO> filerException(FileException exception){
         MessageDTO m=new MessageDTO(exception);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(m);
     }
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<MessageDTO> sQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException exception){
+
+    @ExceptionHandler(LikeNonTrovatoException.class)
+    public ResponseEntity<MessageDTO> likeNonTrovatoException(LikeNonTrovatoException exception){
+        MessageDTO m=new MessageDTO(exception);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(m);
+    }
+    @ExceptionHandler(NessunCommentoException.class)
+    public ResponseEntity<MessageDTO> nessunCommentoException(NessunCommentoException exception){
+        MessageDTO m=new MessageDTO(exception);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(m);
+    }
+
+    @ExceptionHandler(NessunPermessoVisualizzazioneException.class)
+    public ResponseEntity<MessageDTO> nessunPermessoVisualizzazioneException(NessunPermessoVisualizzazioneException exception){
+        MessageDTO m=new MessageDTO(exception);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(m);
+    }
+
+    @ExceptionHandler(PasswordErrataException.class)
+    public ResponseEntity<MessageDTO> passwordErrataException(PasswordErrataException exception){
+        MessageDTO m=new MessageDTO(exception);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(m);
+    }
+
+    @ExceptionHandler(PostException.class)
+    public ResponseEntity<MessageDTO> postException(PostException exception){
+        MessageDTO m=new MessageDTO(exception);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(m);
+    }
+
+    @ExceptionHandler(PostNonTrovatoException.class)
+    public ResponseEntity<MessageDTO> postNonTrovatoException(PostNonTrovatoException exception){
+        MessageDTO m=new MessageDTO(exception);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(m);
+    }
+
+    @ExceptionHandler(UtenteNonTrovatoException.class)
+    public ResponseEntity<MessageDTO> utenteNonTrovatoException(UtenteNonTrovatoException exception){
         MessageDTO m=new MessageDTO(exception);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(m);
     }
@@ -37,11 +71,10 @@ public class GestoreEccezioni {
         MessageDTO m=new MessageDTO(exception);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(m);
     }
-
-    @ExceptionHandler(PasswordErrataException.class)
-    public ResponseEntity<MessageDTO> passwordErrataException(PasswordErrataException exception){
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ResponseEntity<MessageDTO> sQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException exception){
         MessageDTO m=new MessageDTO(exception);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(m);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(m);
     }
 
     @ExceptionHandler(ExpiredJwtException.class)

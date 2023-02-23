@@ -4,9 +4,12 @@ import com.example.demo.dto.general.PostDTO;
 import com.example.demo.dto.request.IdPostRequest;
 import com.example.demo.dto.request.IdUtenteRequest;
 import com.example.demo.dto.request.NumeroPaginaRequest;
+import com.example.demo.dto.response.ListaUtentiLike;
 import com.example.demo.dto.response.VisualizzaPostDTO;
+import com.example.demo.exception.LikeNonTrovatoException;
 import com.example.demo.exception.NessunPermessoVisualizzazioneException;
 import com.example.demo.exception.PostException;
+import com.example.demo.exception.PostNonTrovatoException;
 import com.example.demo.model.Post;
 import com.example.demo.model.Ruolo;
 import com.example.demo.model.Utente;
@@ -21,7 +24,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -49,7 +54,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO salvaPost(String request, Utente u) {
-        return salvaPost(request,u);
+        return salvaPost(request,null,u);
     }
 
     @Override
@@ -91,6 +96,38 @@ public class PostServiceImpl implements PostService {
         Post p=repo.findById(request.getId()).orElseThrow(()-> new PostException(request.getId()));
         if(p.getCreatore().getId()!=u.getId()&&u.getRuolo()!=Ruolo.GESTORE)throw new PostException(u.getUsername());
         repo.delete(p);
+    }
+
+    @Override
+    public void mettiLikeAPost(IdPostRequest request, Utente u) {
+        Post p=repo.findById(request.getId()).orElseThrow(PostNonTrovatoException::new);
+        if(p.getMiPiace()==null)p.setMiPiace(new ArrayList<>());
+        if(u.getMiPiace()==null)u.setMiPiace(new ArrayList<>());
+        if(u.getMiPiace().stream().map(u1->u.getId()).anyMatch(u1->u.getId()==u1))throw new LikeNonTrovatoException();
+        p.getMiPiace().add(u);
+        u.getMiPiace().add(p);
+        repo.save(p);
+    }
+
+    @Override
+    public void rimuoviLikeDaPost(IdPostRequest request, Utente u) {
+        Post p=repo.findById(request.getId()).orElseThrow(PostNonTrovatoException::new);
+        if(p.getMiPiace()==null||u.getMiPiace()==null)throw new LikeNonTrovatoException();
+        if(u.getMiPiace().stream().map(u1->u.getId()).noneMatch(u1->u.getId()==u1))throw new LikeNonTrovatoException();
+        p.getMiPiace().removeIf(u1->u1.getId()==u.getId());
+        u.getMiPiace().removeIf(p1->p1.getId()==p.getId());
+        repo.save(p);
+    }
+
+    @Override
+    public ListaUtentiLike visualizzaLike(IdPostRequest request) {
+        Post p=repo.findById(request.getId()).orElseThrow(PostNonTrovatoException::new);
+        return new ListaUtentiLike(p.getMiPiace());
+    }
+
+    @Override
+    public Post findById(long idPost) {
+        return repo.findById(idPost).orElseThrow(PostNonTrovatoException::new);
     }
 
 

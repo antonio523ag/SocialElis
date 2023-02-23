@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.example.demo.dto.request.CreaAdminRequest;
 import com.example.demo.dto.request.RegistrazioneRequest;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,10 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
 
 @AllArgsConstructor
 @Entity
@@ -71,6 +70,16 @@ public class Utente implements UserDetails {
         classe=c;
         bloccato=true;
 
+    }
+
+    public Utente(CreaAdminRequest request) {
+        nome=request.getNome();
+        cognome=request.getCognome();
+        email=request.getEmail();
+        password="password";
+        username=request.getUsername();
+        ruolo=Ruolo.GESTORE;
+        bloccato=false;
     }
 
     @Override
