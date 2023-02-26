@@ -6,7 +6,6 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 @Component
 public class CorsDisablerFilter  implements Filter {
 

@@ -1,7 +1,5 @@
 package com.example.demo.secutiry;
 
-import com.example.demo.exception.PasswordErrataException;
-import com.example.demo.exception.UtenteBloccatoException;
 import com.example.demo.model.Utente;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -15,16 +13,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class GestoreToken {
 
+    private Key getSignInKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
     private static final String SECRET_KEY = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
-    }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
 
     public String generateToken(Utente userDetails) {
         return generateToken(creaClaims(userDetails));
@@ -56,7 +52,6 @@ public class GestoreToken {
         boolean b2= !isTokenExpired(token);
         boolean b3=userDetails.isAccountNonExpired();
         return b1&&b2&&b3;
-//        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token)&& userDetails.isAccountNonExpired();
     }
 
     private boolean isTokenExpired(String token) {
@@ -65,6 +60,15 @@ public class GestoreToken {
 
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
     }
 
     private Claims extractAllClaims(String token) {
@@ -76,8 +80,6 @@ public class GestoreToken {
                 .getBody();
     }
 
-    private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
+
+
 }

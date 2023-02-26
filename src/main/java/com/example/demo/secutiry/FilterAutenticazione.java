@@ -2,7 +2,6 @@ package com.example.demo.secutiry;
 
 
 import com.example.demo.dto.general.MessageDTO;
-import com.example.demo.exception.handler.GestoreEccezioni;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;

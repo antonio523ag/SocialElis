@@ -26,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -42,15 +41,6 @@ public class PostServiceImpl implements PostService {
         this.fileService = fileService;
     }
 
-    @Override
-    public List<Post> findAllByIdClasse(Utente u) {
-        return null;
-    }
-
-    @Override
-    public List<Post> findAllByIdCreatore(IdUtenteRequest request) {
-        return null;
-    }
 
     @Override
     public PostDTO salvaPost(String request, Utente u) {
