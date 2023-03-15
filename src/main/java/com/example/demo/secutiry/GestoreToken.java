@@ -5,13 +5,23 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.function.Function;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class GestoreToken {
+    private final UserDetailsService userDetailsService;
+
+    public GestoreToken(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
@@ -27,11 +37,12 @@ public class GestoreToken {
     }
 
     public String generateToken(Claims extraClaims) {
+        long durata=1000*60*20;
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + durata))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -78,6 +89,37 @@ public class GestoreToken {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    @Value("${jwt.durata.tempoMaxRefresh}")
+    private long tempoMaxRefresh;
+
+    public String refreshToken(String tokenScaduto){
+
+        String c;
+        try{
+            c= Jwts
+                    .parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(tokenScaduto)
+                    .getBody().getSubject();
+        }catch (ExpiredJwtException ex){
+            c=ex.getClaims().getSubject();
+            Date d=ex.getClaims().getExpiration();
+            LocalDateTime dataScadenza=d.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            LocalDateTime dataMax=LocalDateTime.now().minusMinutes(tempoMaxRefresh);
+
+            if(dataScadenza.isBefore(dataMax)){
+                throw ex;
+            }
+        }
+        Utente u= (Utente)userDetailsService.loadUserByUsername(c) ;
+        return generateToken(u);
+    }
+
+    public Utente getUtenteFromToken(String token){
+        return (Utente) userDetailsService.loadUserByUsername(extractUsername(token));
     }
 
 

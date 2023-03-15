@@ -2,6 +2,7 @@ package com.example.demo.dto.general;
 
 import com.example.demo.model.Post;
 import com.example.demo.model.Utente;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@Schema(name = "Post", description = "post per le response")
 public class PostDTO {
     private long id;
     private String testo;
@@ -25,6 +27,7 @@ public class PostDTO {
     private String usernameCreatore;
     private List<CommentoDTO> commenti;
     private int numeroDiLike;
+    private String imgProfiloUtente;
 
     public PostDTO(Post p){
         id=p.getId();
@@ -35,5 +38,6 @@ public class PostDTO {
         usernameCreatore=p.getCreatore().getUsername();
         commenti=p.getCommenti()==null?new ArrayList<>():p.getCommenti().stream().map(CommentoDTO::new).toList();
         numeroDiLike=p.getMiPiace()==null?0:p.getMiPiace().size();
+        imgProfiloUtente=p.getCreatore().getPathImg();
     }
 }

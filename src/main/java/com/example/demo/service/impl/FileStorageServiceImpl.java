@@ -37,7 +37,7 @@ public class FileStorageServiceImpl implements FileStorageService {
             Files.createDirectories(profilo);
             Files.createDirectories(post);
         } catch (Exception ex) {
-            throw new FileException("Could not create the directory where the uploaded files will be stored.");
+            throw new FileException("impossibile creare o caricare la cartella in cui salvare la foto.");
         }
     }
 

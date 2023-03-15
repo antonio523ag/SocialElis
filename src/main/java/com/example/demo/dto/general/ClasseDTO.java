@@ -1,6 +1,7 @@
 package com.example.demo.dto.general;
 
 import com.example.demo.model.Classe;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(name = "Classe", description = "classe per le response")
 public class ClasseDTO {
     private long id;
     private String codice;

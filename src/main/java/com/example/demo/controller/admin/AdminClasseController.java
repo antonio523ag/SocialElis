@@ -1,19 +1,18 @@
-package com.example.demo.controller;
+package com.example.demo.controller.admin;
 
 import com.example.demo.dto.general.ClasseDTO;
 import com.example.demo.dto.request.IdAulaRequest;
 import com.example.demo.dto.request.CreaClasseRequest;
 import com.example.demo.service.ClasseService;
 import com.example.demo.utils.UtilPaths;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/"+ UtilPaths.Admin.ADMIN)
+@Tag(name = "Metodi Admin", description = "elenco dei metodi dell'admin, l'utente deve essere autenticato come admin per chiamarli")
 public class AdminClasseController {
 
     private final ClasseService service;
@@ -33,6 +32,7 @@ public class AdminClasseController {
         service.chiudiAula(request);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
 
 
 }

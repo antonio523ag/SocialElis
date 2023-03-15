@@ -18,6 +18,7 @@ public interface UtilPaths {
         String ACCETTA_RICHIESTA="accettaRichiesta";
         String ACCETTA_RICHIESTE_BULK="accettaRichiesteBulk";
         String CREA_ADMIN="creaAdmin";
+        String GET_CLASSI_APERTE = "getClassiAperte";
     }
 
     interface Studente {

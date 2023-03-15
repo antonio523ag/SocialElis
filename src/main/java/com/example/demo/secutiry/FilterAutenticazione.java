@@ -18,7 +18,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -28,13 +27,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class FilterAutenticazione extends OncePerRequestFilter {
 
     private final GestoreToken jwtService;
-    private final UserDetailsService userDetailsService;
+
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,@NonNull HttpServletResponse response,@NonNull FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        String userEmail;
+        UserDetails userDetails;
         System.out.println(request.getRequestURI());
 
         if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
@@ -43,16 +42,27 @@ public class FilterAutenticazione extends OncePerRequestFilter {
         }
         jwt = authHeader.substring(7);
         try {
-            userEmail = jwtService.extractUsername(jwt);
+
+            userDetails = jwtService.getUtenteFromToken(jwt);
         }catch (ExpiredJwtException e){
-            scriviErrore(response,"il token è scaduto");
-            return;
+            try{
+                String token=jwtService.refreshToken(jwt);
+                response.setStatus(450);
+                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                response.setHeader("Authorization",token);
+                MessageDTO m=new MessageDTO("il token è scaduto, controllare l'header per il nuovo token");
+                new ObjectMapper().writeValue(response.getOutputStream(),m);
+                return;
+            }catch (ExpiredJwtException ex) {
+                scriviErrore(response, "il token è scaduto");
+                return;
+            }
         }catch (MalformedJwtException e){
             scriviErrore(response,"il token non è valido");
             return;
         }
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+
+        if (userDetails != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

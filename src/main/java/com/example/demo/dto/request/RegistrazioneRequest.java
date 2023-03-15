@@ -1,5 +1,7 @@
 package com.example.demo.dto.request;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +10,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@Schema(name = "request - registrazione", description = "dati da inserire per richiedere la registrazione ad un'aula, il codice classe deve essere un valore reale presente sul db")
 public class RegistrazioneRequest {
     @NotBlank
     private String nome;

@@ -82,4 +82,10 @@ public class GestoreEccezioni {
         MessageDTO m=new MessageDTO(exception);
         return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body(m);
     }
+
+    @ExceptionHandler(ValoreNonValidoException.class)
+    public ResponseEntity<MessageDTO> valoreNonValido(ValoreNonValidoException exception){
+        MessageDTO m=new MessageDTO(exception);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(m);
+    }
 }

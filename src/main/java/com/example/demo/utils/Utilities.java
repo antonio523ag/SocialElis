@@ -1,7 +1,5 @@
 package com.example.demo.utils;
 
-import com.example.demo.model.Utente;
-
 public class Utilities {
 
     public static String generaCodice(String nome){

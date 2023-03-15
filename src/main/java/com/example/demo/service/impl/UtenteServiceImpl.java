@@ -11,6 +11,7 @@ import com.example.demo.exception.UtenteNonTrovatoException;
 import com.example.demo.model.Classe;
 import com.example.demo.model.Utente;
 import com.example.demo.repository.ClasseRepository;
+import com.example.demo.repository.CustomRepository;
 import com.example.demo.repository.UtenteRepository;
 import com.example.demo.service.FileStorageService;
 import com.example.demo.service.UtenteService;
@@ -26,11 +27,13 @@ public class UtenteServiceImpl implements UtenteService {
     private final UtenteRepository repo;
     private final ClasseRepository classeRepo;
     private final FileStorageService fileService;
+    private final CustomRepository repoCustom;
 
-    public UtenteServiceImpl(UtenteRepository repo, ClasseRepository classeRepo, FileStorageService fileService) {
+    public UtenteServiceImpl(UtenteRepository repo, ClasseRepository classeRepo, FileStorageService fileService, CustomRepository repoCustom) {
         this.repo = repo;
         this.classeRepo = classeRepo;
         this.fileService = fileService;
+        this.repoCustom = repoCustom;
     }
 
     @Override
@@ -49,6 +52,7 @@ public class UtenteServiceImpl implements UtenteService {
 
     @Override
     public void registrati(RegistrazioneRequest request) {
+        if(!request.getPassword().equals(request.getPasswordRipetuta())) throw new PasswordErrataException("le password non corrispondono");
         Classe c=classeRepo.findClasseByCodice(request.getCodiceClasse()).orElseThrow(()-> new ClasseNonTrovataException("nessuna classe con codice "+request.getCodiceClasse()));
         Utente u=new Utente(request,c);
         repo.save(u);
@@ -67,8 +71,7 @@ public class UtenteServiceImpl implements UtenteService {
 
     @Override
     public void accettaRichieste(IdUtenteBulkRequest request) {
-        List<Long> utentiDaAccettare=request.getUtenti().stream().map(IdUtenteRequest::getId).toList();
-        List<Utente> utenti=repo.findAllById(utentiDaAccettare);
+        List<Utente> utenti=repo.findAllById(request.getIdUtenti());
         utenti.forEach(u->u.setBloccato(false));
         repo.saveAll(utenti);
     }
@@ -81,17 +84,16 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public UtenteDTO modificaUtente(ModificaUtenteRequest request) {
-        Utente u=repo.findById(request.getIdUtente()).orElseThrow(UtenteNonTrovatoException::new);
+    public void modificaUtente(ModificaUtenteRequest request, Utente u) {
         if(!request.getPassword().equals(u.getPassword())) throw new PasswordErrataException("la password inserita non corrisponde alla password dell'utente");
         if(request.getUsername()!=null)u.setUsername(request.getUsername());
         if(request.getNuovaPassword()!=null){
-            if(request.getPasswordRipetuta()==null)throw new PasswordErrataException("la password va inserita anche nella ripetizione");
+            if(!request.getPassword().matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$"))throw new PasswordErrataException("la password non rispetta il path");
+            else if(request.getPasswordRipetuta()==null)throw new PasswordErrataException("la password va inserita anche nella ripetizione");
             else if(!request.getPassword().equals(request.getPasswordRipetuta()))throw  new PasswordErrataException("le due password devono coincidere");
             else u.setPassword(request.getPassword());
         }
         repo.save(u);
-        return new UtenteDTO(u);
     }
 
 
@@ -105,8 +107,7 @@ public class UtenteServiceImpl implements UtenteService {
 
     @Override
     public UtenteDTOListResponse cercaUtente(CercaUtenteRequest request, Utente richiedente) {
-        List<Utente> u=repo.findAll().stream().filter(u1->u1.isValid(request.getTestoRicerca())).toList();
-        if(richiedente.getClasse()==null)u.removeIf(u1->richiedente.getClasse()==null?u1.getClasse()!=null:u1.getClasse().getId()!=richiedente.getClasse().getId());
+        List<Utente> u=repoCustom.getUtentiFiltrati(request,richiedente);
         return new UtenteDTOListResponse(u);
     }
 }

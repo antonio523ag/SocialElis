@@ -7,5 +7,5 @@ import com.example.demo.model.Utente;
 public interface CommentoService {
     void commentaPost(CommentaPostRequest request, Utente u);
 
-    void cancellaPost(IdCommentoRequest request, Utente u);
+    void CancellaCommento(IdCommentoRequest request, Utente u);
 }

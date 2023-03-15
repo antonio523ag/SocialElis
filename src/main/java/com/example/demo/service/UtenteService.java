@@ -16,7 +16,7 @@ public interface UtenteService {
     VisualizzaRichiesteResponse visualizzaRichieste();
     void accettaRichieste(IdUtenteBulkRequest request);
     void accettaRichiesta(IdUtenteRequest request);
-    UtenteDTO modificaUtente(ModificaUtenteRequest request);
+    void modificaUtente(ModificaUtenteRequest request, Utente loggato);
     UtenteDTO aggiungiImmagineProfilo(Utente u, MultipartFile img);
     UtenteDTOListResponse cercaUtente(CercaUtenteRequest request, Utente richiedente);
 }

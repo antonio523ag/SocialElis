@@ -26,14 +26,10 @@ public class ConfiguratorePath {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-
                 .authorizeHttpRequests()
-
-                .requestMatchers("/"+ UtilPaths.General.GENERAL+"/**").permitAll()
                 .requestMatchers("/"+UtilPaths.Admin.ADMIN+"/**").hasRole(Ruolo.GESTORE.getNomeTrimmed())
                 .requestMatchers("/"+ UtilPaths.Studente.STUDENTE+"/**").hasAnyRole(Ruolo.GESTORE.getNomeTrimmed(),Ruolo.STUDENTE.getNomeTrimmed())
-                .anyRequest()
-                .authenticated()
+                .anyRequest().permitAll()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

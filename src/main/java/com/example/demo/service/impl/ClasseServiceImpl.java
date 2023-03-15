@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.dto.general.ClasseDTO;
 import com.example.demo.dto.request.IdAulaRequest;
 import com.example.demo.dto.request.CreaClasseRequest;
+import com.example.demo.dto.response.ListClasseDTO;
 import com.example.demo.exception.ClasseNonTrovataException;
 import com.example.demo.model.Classe;
 import com.example.demo.model.Utente;
@@ -24,16 +25,6 @@ public class ClasseServiceImpl implements ClasseService {
         this.service = service;
     }
 
-    @Override
-    public Classe getClasseByCodice(String codice) {
-        return repo.findClasseByCodice(codice).orElseThrow(()->new ClasseNonTrovataException(codice));
-
-    }
-
-    @Override
-    public Classe getClasseById(long id) {
-        return repo.findById(id).orElseThrow(()->new ClasseNonTrovataException(id));
-    }
 
     @Override
     public ClasseDTO aggiungiClasse(Classe c) {
@@ -62,5 +53,10 @@ public class ClasseServiceImpl implements ClasseService {
     @Override
     public void chiudiAula(IdAulaRequest request) {
         chiudiAula(request.getIdAula());
+    }
+
+    @Override
+    public ListClasseDTO getAuleAperte() {
+        return new ListClasseDTO(repo.findAllByChiusaIsFalse());
     }
 }

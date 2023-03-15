@@ -35,7 +35,7 @@ public class CommentoServiceImpl implements CommentoService {
     }
 
     @Override
-    public void cancellaPost(IdCommentoRequest request, Utente u) {
+    public void CancellaCommento(IdCommentoRequest request, Utente u) {
         Commento c=repo.findById(request.getId()).orElseThrow(NessunCommentoException::new);
         if(u.getRuolo()!=Ruolo.GESTORE&&c.getUtente().getId()!=u.getId()&&c.getPost().getCreatore().getId()!=u.getId())throw new NessunPermessoVisualizzazioneException("il commento non è stato scritto dall'utente selezionato");
         repo.delete(c);
