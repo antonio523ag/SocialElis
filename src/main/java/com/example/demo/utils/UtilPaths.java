@@ -26,6 +26,9 @@ public interface UtilPaths {
         String MODIFICA_PROFILO="modificaProfilo";
         String AGGIUNGI_IMMAGINE="aggiungiImmagine";
         String CERCA_UTENTE="cercaUtente";
+        String GET_UTENTE="getUtente";
+        String VISUALIZZA_PARTECIPANTI_AULA="visualizzaPartecipantiAula";
+        String VISUALIZZA_PROFILO="visualizzaProfilo";
         String VISUALIZZA_FOTO_PROFILO="fotoProfilo";
         String VISUALIZZA_FOTO_POST="fotoPost";
         String VISUALIZZA_POST="visualizzaPost";

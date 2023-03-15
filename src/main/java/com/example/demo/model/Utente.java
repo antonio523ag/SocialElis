@@ -3,6 +3,7 @@ package com.example.demo.model;
 import com.example.demo.dto.request.CreaAdminRequest;
 import com.example.demo.dto.request.RegistrazioneRequest;
 import jakarta.persistence.*;
+import jakarta.validation.Constraint;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,10 +16,10 @@ import java.util.List;
 
 @AllArgsConstructor
 @Entity
-@Table(name = "user")
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(name="user",uniqueConstraints = { @UniqueConstraint(columnNames = { "email"},name = "email_duplicata") })
 public class Utente implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +28,8 @@ public class Utente implements UserDetails {
     private String nome;
     @Column(name = "last_name",nullable = false,updatable = false)
     private String cognome;
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
+
     private String email;
     @Column(nullable = false)
     private String password;
@@ -76,7 +78,7 @@ public class Utente implements UserDetails {
         nome=request.getNome();
         cognome=request.getCognome();
         email=request.getEmail();
-        password="password";
+        password="Password!1";
         username=request.getUsername();
         ruolo=Ruolo.GESTORE;
         bloccato=false;
@@ -89,6 +91,7 @@ public class Utente implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
+        if(ultimoAccesso==null) return true;
         return ultimoAccesso.plusMonths(6).isAfter(LocalDateTime.now());
     }
 

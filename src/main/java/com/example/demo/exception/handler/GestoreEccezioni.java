@@ -73,7 +73,19 @@ public class GestoreEccezioni {
     }
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public ResponseEntity<MessageDTO> sQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException exception){
-        MessageDTO m=new MessageDTO(exception);
+        String message=exception.getMessage();
+        int index=message.indexOf("'");
+        String testo = "";
+        if(index>=0){
+            testo=message.substring(index+1);
+        }
+        index=testo.indexOf("'");
+        if(index>=0){
+            testo=testo.substring(0,index);
+            testo+=" già presente nel sistema";
+        }
+
+        MessageDTO m=new MessageDTO(testo.isBlank()?message:testo);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(m);
     }
 

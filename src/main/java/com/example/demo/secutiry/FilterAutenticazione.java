@@ -2,6 +2,7 @@ package com.example.demo.secutiry;
 
 
 import com.example.demo.dto.general.MessageDTO;
+import com.example.demo.exception.UtenteNonTrovatoException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -50,6 +51,7 @@ public class FilterAutenticazione extends OncePerRequestFilter {
                 response.setStatus(450);
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 response.setHeader("Authorization",token);
+                response.setHeader("Access-Control-Expose-Headers","*");
                 MessageDTO m=new MessageDTO("il token è scaduto, controllare l'header per il nuovo token");
                 new ObjectMapper().writeValue(response.getOutputStream(),m);
                 return;
@@ -57,7 +59,7 @@ public class FilterAutenticazione extends OncePerRequestFilter {
                 scriviErrore(response, "il token è scaduto");
                 return;
             }
-        }catch (MalformedJwtException e){
+        }catch (MalformedJwtException | UtenteNonTrovatoException e){
             scriviErrore(response,"il token non è valido");
             return;
         }

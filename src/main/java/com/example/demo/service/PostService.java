@@ -10,6 +10,8 @@ import com.example.demo.model.Post;
 import com.example.demo.model.Utente;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 
 public interface PostService {
 
@@ -30,4 +32,6 @@ public interface PostService {
     ListaUtentiLike visualizzaLike(IdPostRequest request);
 
     Post findById(long idPost);
+
+    List<Post> findByUtenteId(long id);
 }

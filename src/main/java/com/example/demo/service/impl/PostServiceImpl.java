@@ -57,12 +57,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public VisualizzaPostDTO visualizzaPostPerUtente(IdUtenteRequest request, Utente u) {
-        Utente u1=utenteService.getUtenteById(request);
-        if(u.getRuolo()!= Ruolo.GESTORE){
-            if(u.getClasse()==null&&u1.getClasse()!=null)throw new NessunPermessoVisualizzazioneException("non puoi visualizzare i post di persone che sono ancora in ambiente di testing");
-            else if(u.getClasse()!=null&&u1.getClasse()==null) throw new NessunPermessoVisualizzazioneException("sei ancora in ambiente di testing, non puoi visualizzare i post in ambiente comune");
-            else if(u.getClasse()!=null && u.getClasse().getId()!=u1.getClasse().getId())throw new NessunPermessoVisualizzazioneException("non siete nella stessa classe, non puoi visualizzare i post di questo utente");
-        }
+        Utente u1=utenteService.getUtenteById(request,u);
         Pageable p= PageRequest.of(request.getPage(), 20);
         Page<Post> l=repo.findAllByCreatore_IdOrderByDataInserimentoDesc(request.getId(), p);
         List<PostDTO> list=l.get().map(PostDTO::new).toList();
@@ -118,6 +113,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post findById(long idPost) {
         return repo.findById(idPost).orElseThrow(PostNonTrovatoException::new);
+    }
+
+    @Override
+    public List<Post> findByUtenteId(long id) {
+        return repo.findAllByCreatore_IdOrderByDataInserimentoDesc(id,PageRequest.of(0,20)).getContent();
     }
 
 

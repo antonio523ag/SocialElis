@@ -14,4 +14,7 @@ public interface ClasseService {
     void chiudiAula(IdAulaRequest request);
 
     ListClasseDTO getAuleAperte();
+
+
+    Classe findClasseByCodice(CreaClasseRequest request);
 }

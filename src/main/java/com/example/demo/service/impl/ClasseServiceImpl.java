@@ -10,9 +10,12 @@ import com.example.demo.model.Utente;
 import com.example.demo.repository.ClasseRepository;
 import com.example.demo.service.ClasseService;
 import com.example.demo.service.UtenteService;
+import com.example.demo.utils.Utilities;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClasseServiceImpl implements ClasseService {
@@ -57,6 +60,24 @@ public class ClasseServiceImpl implements ClasseService {
 
     @Override
     public ListClasseDTO getAuleAperte() {
-        return new ListClasseDTO(repo.findAllByChiusaIsFalse());
+        List<Classe> classi=repo.findAllByChiusaIsFalse();
+        classi.removeIf(a->a.getCodice().equals("GRU_ADMIN"));
+        return new ListClasseDTO(classi);
     }
+
+    @Override
+    public Classe findClasseByCodice(CreaClasseRequest request) {
+        String codiceClasse= Utilities.generaCodice(request.getNome());
+        Classe c;
+        Optional<Classe> optional=repo.findClasseByCodice(codiceClasse);
+        if(optional.isEmpty()){
+            c=new Classe(0,codiceClasse,request.getNome(),null, LocalDate.now(),null,false,null);
+            c=repo.save(c);
+        }else{
+            c=optional.get();
+        }
+        return c;
+    }
+
+
 }

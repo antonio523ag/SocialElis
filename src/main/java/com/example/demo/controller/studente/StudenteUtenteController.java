@@ -4,9 +4,14 @@ package com.example.demo.controller.studente;
 import com.example.demo.dto.general.MessageDTO;
 import com.example.demo.dto.general.UtenteDTO;
 import com.example.demo.dto.request.CercaUtenteRequest;
+import com.example.demo.dto.request.IdUtenteRequest;
 import com.example.demo.dto.request.ModificaUtenteRequest;
+import com.example.demo.dto.response.SingoloUtenteDTO;
 import com.example.demo.dto.response.UtenteDTOListResponse;
+import com.example.demo.exception.ClasseNonTrovataException;
+import com.example.demo.model.Post;
 import com.example.demo.model.Utente;
+import com.example.demo.service.PostService;
 import com.example.demo.service.UtenteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,6 +26,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 import static com.example.demo.utils.UtilPaths.Studente.*;
 
 @RestController
@@ -29,9 +36,11 @@ import static com.example.demo.utils.UtilPaths.Studente.*;
 public class StudenteUtenteController {
 
     private final UtenteService service;
+    private final PostService postService;
 
-    public StudenteUtenteController(UtenteService service) {
+    public StudenteUtenteController(UtenteService service, PostService postService) {
         this.service = service;
+        this.postService = postService;
     }
 
     @PostMapping("/"+MODIFICA_PROFILO)
@@ -68,6 +77,50 @@ public class StudenteUtenteController {
         UtenteDTOListResponse response=service.cercaUtente(request,u);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/"+GET_UTENTE)
+    @Operation(summary = "cerca utente per id",description = "metodo da invocare visualizzare l'utente partendo dall'id",security = { @SecurityRequirement(name = "jwt") })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "profilo dell'utente", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,schema = @Schema(implementation = SingoloUtenteDTO.class))),
+            @ApiResponse(responseCode = "400", description = "nessun utente con quell'id",content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,schema = @Schema(implementation = MessageDTO.class)))
+    })
+    public ResponseEntity<SingoloUtenteDTO> cercaUtentePerId(@RequestBody IdUtenteRequest request, UsernamePasswordAuthenticationToken p){
+        Utente u=(Utente)p.getPrincipal();
+        Utente response=service.getUtenteById(request,u);
+        List<Post> post=postService.findByUtenteId(response.getId());
+        return ResponseEntity.ok(new SingoloUtenteDTO(response,post));
+    }
+
+    @GetMapping("/"+VISUALIZZA_PROFILO)
+    @Operation(summary = "visualizza Profilo",description = "metodo da invocare visualizzare il profilo dell'utente",security = { @SecurityRequirement(name = "jwt") })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "profilo dell'utente", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,schema = @Schema(implementation = SingoloUtenteDTO.class))),
+            @ApiResponse(responseCode = "400", description = "nessun utente con quell'id",content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,schema = @Schema(implementation = MessageDTO.class)))
+    })
+    public ResponseEntity<SingoloUtenteDTO> visualizzaProfilo(UsernamePasswordAuthenticationToken p){
+        Utente u=(Utente)p.getPrincipal();
+        List<Post> post=postService.findByUtenteId(u.getId());
+        return ResponseEntity.ok(new SingoloUtenteDTO(u,post));
+    }
+
+    @GetMapping("/"+VISUALIZZA_PARTECIPANTI_AULA)
+    @Operation(summary = "visualizza partecipanti aula",description = "metodo da invocare visualizzare gli altri utenti presenti nell'aula",security = { @SecurityRequirement(name = "jwt") })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "profilo dell'utente", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,schema = @Schema(implementation = UtenteDTOListResponse.class))),
+            @ApiResponse(responseCode = "400", description = "nessun utente con quell'id",content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,schema = @Schema(implementation = MessageDTO.class)))
+    })
+    public ResponseEntity<UtenteDTOListResponse> trovaUtentiByAula(UsernamePasswordAuthenticationToken p){
+        Utente u=(Utente)p.getPrincipal();
+        if(u.getClasse()==null)throw new ClasseNonTrovataException("nessuna aula per questo utente");
+        List<Utente> utenti=service.getUtenteByIdClasse(u.getClasse().getId());
+        return ResponseEntity.ok(new UtenteDTOListResponse(utenti));
+    }
+
+
+
+
+
+
 
 
 }

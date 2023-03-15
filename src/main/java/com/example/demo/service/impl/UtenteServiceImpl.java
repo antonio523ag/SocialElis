@@ -4,11 +4,9 @@ import com.example.demo.dto.general.UtenteDTO;
 import com.example.demo.dto.request.*;
 import com.example.demo.dto.response.UtenteDTOListResponse;
 import com.example.demo.dto.response.VisualizzaRichiesteResponse;
-import com.example.demo.exception.ClasseNonTrovataException;
-import com.example.demo.exception.PasswordErrataException;
-import com.example.demo.exception.UtenteBloccatoException;
-import com.example.demo.exception.UtenteNonTrovatoException;
+import com.example.demo.exception.*;
 import com.example.demo.model.Classe;
+import com.example.demo.model.Ruolo;
 import com.example.demo.model.Utente;
 import com.example.demo.repository.ClasseRepository;
 import com.example.demo.repository.CustomRepository;
@@ -46,8 +44,14 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public Utente getUtenteById(IdUtenteRequest request) {
-        return repo.findById(request.getId()).orElseThrow(()->new UtenteNonTrovatoException(request.getId()));
+    public Utente getUtenteById(IdUtenteRequest request,Utente richiedente) {
+        Utente u= repo.findById(request.getId()).orElseThrow(()->new UtenteNonTrovatoException(request.getId()));
+        if(richiedente.getRuolo()!= Ruolo.GESTORE){
+            if(richiedente.getClasse()==null&&u.getClasse()!=null)throw new NessunPermessoVisualizzazioneException("non puoi visualizzare i post di persone che sono ancora in ambiente di testing");
+            else if(richiedente.getClasse()!=null&&u.getClasse()==null) throw new NessunPermessoVisualizzazioneException("sei ancora in ambiente di testing, non puoi visualizzare i post in ambiente comune");
+            else if(richiedente.getClasse()!=null && u.getClasse().getId()!=richiedente.getClasse().getId())throw new NessunPermessoVisualizzazioneException("non siete nella stessa classe, non puoi visualizzare i post di questo utente");
+        }
+        return u;
     }
 
     @Override
@@ -109,5 +113,10 @@ public class UtenteServiceImpl implements UtenteService {
     public UtenteDTOListResponse cercaUtente(CercaUtenteRequest request, Utente richiedente) {
         List<Utente> u=repoCustom.getUtentiFiltrati(request,richiedente);
         return new UtenteDTOListResponse(u);
+    }
+
+    @Override
+    public List<Utente> getUtenteByIdClasse(long id) {
+        return repo.findUtenteByClasse_Id(id);
     }
 }

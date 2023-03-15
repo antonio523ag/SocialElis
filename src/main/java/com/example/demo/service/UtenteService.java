@@ -7,10 +7,12 @@ import com.example.demo.dto.response.VisualizzaRichiesteResponse;
 import com.example.demo.model.Utente;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface UtenteService {
 
     Utente login(LoginRequest request);
-    Utente getUtenteById(IdUtenteRequest request);
+    Utente getUtenteById(IdUtenteRequest request,Utente u);
     void registrati(RegistrazioneRequest request);
     void salvaUtente(Utente u);
     VisualizzaRichiesteResponse visualizzaRichieste();
@@ -19,4 +21,6 @@ public interface UtenteService {
     void modificaUtente(ModificaUtenteRequest request, Utente loggato);
     UtenteDTO aggiungiImmagineProfilo(Utente u, MultipartFile img);
     UtenteDTOListResponse cercaUtente(CercaUtenteRequest request, Utente richiedente);
+
+    List<Utente> getUtenteByIdClasse(long id);
 }

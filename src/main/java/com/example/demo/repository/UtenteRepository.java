@@ -13,6 +13,7 @@ public interface UtenteRepository  extends JpaRepository<Utente,Long> {
     Optional<Utente> findByEmailAndPassword(String email,String password);
     @Query("select u from Utente u where u.bloccato = false and u.ultimoAccesso is null")
     List<Utente> visulizzaRichieste();
+    List<Utente> findUtenteByClasse_Id(long id);
 
 
 }

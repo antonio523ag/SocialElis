@@ -18,6 +18,4 @@ public class CreaAdminRequest {
     private String email;
     @NotBlank
     private String username;
-    @NotBlank
-    private String codiceClasse;
 }

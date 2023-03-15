@@ -41,4 +41,6 @@ public class Classe {
         dataInizio=request.getDataInizio();
         linkEsterno= request.getLinkEsterno();
     }
+
+
 }
